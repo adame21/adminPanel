@@ -1,20 +1,24 @@
 import React from "react";
 
-class Agencies extends React.Component {
+class Agents extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      packages: [],
+      agents: [],
       agencies: [],
+      agency: 0,
       agencyName: "",
-      website: "",
-      phone: "",
-      package: 0,
-      subscription: this.getTime(),
+      agentName: "",
+      cellular: "",
+      password: "",
+      license: "",
+      agent: 0,
       page: "default",
       editObj: {},
       editMode: false,
       searchAgencyName: "",
+      searchAgency: "none",
+      searchAgentName: "",
       searchPhone: ""
     };
 
@@ -50,10 +54,10 @@ class Agencies extends React.Component {
   }
 
   async loadArrays() {
-    var packagesRes = await fetch("http://localhost:3005/select/packages", {
+    var agentsRes = await fetch("http://localhost:3005/select/agents/all", {
       method: "get"
     });
-    var packages = await packagesRes.json();
+    var agents = await agentsRes.json();
 
     var agenciesRes = await fetch("http://localhost:3005/select/agencies/all", {
       method: "get"
@@ -61,9 +65,10 @@ class Agencies extends React.Component {
     var agencies = await agenciesRes.json();
 
     this.setState({
-      packages: packages,
+      agents: agents,
       agencies: agencies,
-      package: packages[0] ? packages[0].id : 0
+      agent: agents[0] ? agents[0].id : 0,
+      agency: agencies[0] ? agencies[0].id : 0
     });
   }
 
@@ -73,12 +78,12 @@ class Agencies extends React.Component {
 
   async handleSearch() {
     var searchRes = await fetch(
-      `http://localhost:3005/select/agencies?searchName=${this.state.searchAgencyName}&searchPhone=${this.state.searchPhone}`
+      `http://localhost:3005/select/agents?searchName=${this.state.searchAgentName}&searchPhone=${this.state.searchPhone}&searchAgency=${this.state.searchAgency}`
     );
     var searchData = await searchRes.json();
 
     this.setState({
-      agencies: searchData
+      agents: searchData
     });
   }
 
@@ -87,7 +92,7 @@ class Agencies extends React.Component {
 
     if (this.validateState(this.state)) {
       try {
-        var res = await fetch("http://localhost:3005/add/agencies", {
+        var res = await fetch("http://localhost:3005/add/agents", {
           method: "post",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(this.state)
@@ -96,6 +101,7 @@ class Agencies extends React.Component {
         this.setState({
           page: "added"
         });
+
         this.handleReset();
         this.loadArrays();
       } catch (err) {
@@ -112,8 +118,7 @@ class Agencies extends React.Component {
     if (confAnswer) {
       var deletionId =
         event.target.parentElement.parentElement.firstElementChild.innerHTML;
-
-      var res = await fetch("http://localhost:3005/delete/agencies", {
+      var res = await fetch("http://localhost:3005/delete/agents", {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -131,27 +136,27 @@ class Agencies extends React.Component {
   handleEdit(event) {
     let id = event.target.parentElement.parentElement.childNodes[0].innerHTML;
     let name = event.target.parentElement.parentElement.childNodes[1].innerHTML;
-    let website =
+    let cellular =
       event.target.parentElement.parentElement.childNodes[2].innerHTML;
-    let phone =
+    let password =
       event.target.parentElement.parentElement.childNodes[3].innerHTML;
-    let packageId =
+    let agency =
       event.target.parentElement.parentElement.childNodes[4].innerHTML;
-    let subscription =
+    let license =
       event.target.parentElement.parentElement.childNodes[5].innerHTML;
 
     this.setState({
-      agencyName: name,
-      website: website,
-      phone: phone,
-      package: packageId,
-      subscription: subscription,
+      agentName: name,
+      cellular: cellular,
+      password: password,
+      agency: agency,
+      license: license,
       editObj: Object.assign(this.state.editObj, {
         agencyName: name,
-        website: website,
-        phone: phone,
-        packageId: packageId,
-        subscription: subscription,
+        cellular: cellular,
+        password: password,
+        agency: agency,
+        license: license,
         id: id
       }),
       editMode: true
@@ -159,18 +164,17 @@ class Agencies extends React.Component {
   }
 
   async saveChanges() {
-    debugger;
     this.setState({
       editObj: Object.assign(this.state.editObj, {
-        agencyName: this.state.agencyName,
-        website: this.state.website,
-        phone: this.state.phone,
-        package: this.state.package,
-        subscription: this.state.subscription
+        agentName: this.state.agentName,
+        cellular: this.state.cellular,
+        password: this.state.password,
+        agency: this.state.agency,
+        license: this.state.license
       })
     });
-    debugger;
-    var res = await fetch("http://localhost:3005/update/agencies", {
+
+    var res = await fetch("http://localhost:3005/update/agents", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(this.state.editObj)
@@ -190,11 +194,11 @@ class Agencies extends React.Component {
 
   validateState(obj) {
     if (
-      obj.agencyName &&
-      obj.website &&
-      obj.phone &&
-      obj.package &&
-      obj.subscription
+      obj.agentName &&
+      obj.cellular &&
+      obj.password &&
+      obj.agency &&
+      !isNaN(obj.license)
     ) {
       return true;
     } else {
@@ -204,16 +208,17 @@ class Agencies extends React.Component {
 
   handleReset() {
     this.setState({
-      agencyName: "",
-      website: "",
-      phone: "",
-      subscription: this.getTime()
+      agentName: "",
+      cellular: "",
+      password: "",
+      license: ""
     });
   }
 
   handleSearchReset() {
     this.setState({
       searchAgencyName: "",
+      searchAgentName: "",
       searchPhone: ""
     });
   }
@@ -261,7 +266,6 @@ class Agencies extends React.Component {
       );
     }
   }
-
   renderSearchButtons() {
     return (
       <div>
@@ -292,90 +296,91 @@ class Agencies extends React.Component {
             </button>
           </div>
           <div className="col align-self-center">
-            <h1 className="text-primary">Agencies Panel</h1>
+            <h1 className="text-primary">Agents Panel</h1>
           </div>
 
           <div className="row justify-content-between">
             <div className="col-4">
-              {" "}
-              <h2>Add agency</h2>
+              <h2>Add Agent</h2>
               <br />
-              <label>Agency name</label>
+              <label>Agent Name</label>
               <input
                 className="form-control"
                 type="text"
-                name="agencyName"
-                value={this.state.agencyName}
+                name="agentName"
+                value={this.state.agentName}
                 onChange={this.handleChange}
               />
               <br />
               <br />
-              <label>Website</label>
+              <label>Cellular</label>
               <input
                 className="form-control"
                 type="text"
-                name="website"
-                value={this.state.website}
+                name="cellular"
+                value={this.state.cellular}
                 onChange={this.handleChange}
               />
               <br />
               <br />
-              <label>Phone</label>
+              <label>Password</label>
               <input
                 className="form-control"
-                type="text"
-                name="phone"
-                value={this.state.phone}
+                type="password"
+                name="password"
+                value={this.state.password}
                 onChange={this.handleChange}
               />
               <br />
               <br />
-              <label>Package</label>
-              <br />
+
               <select
                 className="form-control"
-                name="package"
-                id="package"
+                name="agency"
+                id="agency"
                 onChange={this.handleChange}
-                value={this.state.package}
+                value={this.state.agency}
               >
-                {this.state.packages.map((onePack, i) => (
-                  <option key={onePack.id} id={onePack.id} value={onePack.id}>
-                    {onePack.id}
-                    {onePack.name} - {onePack.no_of_agents} agents -{" "}
-                    {onePack.no_of_documents} documents
+                {this.state.agencies.map((oneAgency, i) => (
+                  <option
+                    key={oneAgency.id}
+                    id={oneAgency.id}
+                    value={oneAgency.id}
+                  >
+                    {oneAgency.id} - {oneAgency.name} - {oneAgency.phone}
                   </option>
                 ))}
               </select>
               <br />
               <br />
-              <label>Subscription</label>
-              <input
-                className="form-control"
-                type="date"
-                name="subscription"
-                value={this.state.subscription}
-                onChange={this.handleChange}
-              />
-              <br />
-              <br />
-              {this.renderButtons()}
-            </div>
-            <div className="col-4">
-              <h2>Search agency</h2>
-              <br />
-              <label>Agency name</label>
+              <label>License</label>
               <input
                 className="form-control"
                 type="text"
-                name="searchAgencyName"
-                value={this.state.searchAgencyName}
+                name="license"
+                value={this.state.license}
+                onChange={this.handleChange}
+              />
+              <br />
+              <br />
+
+              {this.renderButtons()}
+            </div>
+            <div className="col-4">
+              <h2>Search Agent</h2>
+              <br />
+              <label>Agent name</label>
+              <input
+                className="form-control"
+                type="text"
+                name="searchAgentName"
+                value={this.state.searchAgentName}
                 onChange={this.handleChange}
               />
               <br />
               <br />
               <br />
-              <label>Phone</label>
+              <label>Cellular</label>
               <input
                 className="form-control"
                 type="text"
@@ -384,6 +389,27 @@ class Agencies extends React.Component {
                 onChange={this.handleChange}
               />
               <br />
+              <br />
+              <select
+                className="form-control"
+                name="searchAgency"
+                id="searchAgency"
+                onChange={this.handleChange}
+                value={this.state.searchAgency}
+              >
+                {this.state.agencies.map((oneAgency, i) => (
+                  <option
+                    key={oneAgency.id}
+                    id={oneAgency.id}
+                    value={oneAgency.id}
+                  >
+                    {oneAgency.id} - {oneAgency.name} - {oneAgency.phone}
+                  </option>
+                ))}
+                <option key={"none"} id={"none"} value={"none"}>
+                  None
+                </option>
+              </select>
               {this.renderSearchButtons()}
             </div>
           </div>
@@ -400,16 +426,16 @@ class Agencies extends React.Component {
                   Name
                 </th>
                 <th scope="col" key="3">
-                  Website
+                  Cellular
                 </th>
                 <th scope="col" key="4">
-                  Phone
+                  Password
                 </th>
                 <th scope="col" key="5">
-                  Package
+                  Agency
                 </th>
                 <th scope="col" key="6">
-                  Subscription
+                  License
                 </th>
                 <th scope="col" key="7">
                   Last Created
@@ -423,19 +449,19 @@ class Agencies extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.agencies.map(oneAgency => {
+              {this.state.agents.map(oneAgent => {
                 return (
-                  <tr key={oneAgency.id}>
-                    <th scope="row" key={oneAgency.id}>
-                      {oneAgency.id}
+                  <tr key={oneAgent.id}>
+                    <th scope="row" key={oneAgent.id}>
+                      {oneAgent.id}
                     </th>
-                    <td>{oneAgency.name}</td>
-                    <td>{oneAgency.web_site}</td>
-                    <td>{oneAgency.phone}</td>
-                    <td>{oneAgency.package_id}</td>
-                    <td>{oneAgency.subscription_end_date.substring(0, 10)}</td>
-                    <td>{oneAgency.created_at.substring(0, 10)}</td>
-                    <td>{oneAgency.updated_at.substring(0, 10)}</td>
+                    <td>{oneAgent.name}</td>
+                    <td>{oneAgent.cellular}</td>
+                    <td>{oneAgent.password}</td>
+                    <td>{oneAgent.agency_id}</td>
+                    <td>{oneAgent.license_id}</td>
+                    <td>{oneAgent.created_at.substring(0, 10)}</td>
+                    <td>{oneAgent.updated_at.substring(0, 10)}</td>
                     <td>
                       {" "}
                       <button
@@ -465,4 +491,4 @@ class Agencies extends React.Component {
   }
 }
 
-export default Agencies;
+export default Agents;

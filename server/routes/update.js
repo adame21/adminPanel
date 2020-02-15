@@ -23,4 +23,25 @@ router.post("/agencies", async (req, res) => {
   }
 });
 
+router.post("/agents", async (req, res) => {
+  try {
+    console.log(req.body);
+
+    var insertQuery = `
+          update agentsadmin.agents
+          set name = '${req.body.agentName}', cellular = '${req.body.cellular}', password = '${req.body.password}', agency_id = ${req.body.agency}, license_id = ${req.body.license}
+          where id=${req.body.id}
+          `;
+
+    sqlConnection.query(insertQuery, function(err, result) {
+      if (err) throw err;
+
+      res.send(result);
+    });
+  } catch (err) {
+    console.log(`error: ${err.message} / stack: ${err.stack}`);
+    res.send([]);
+  }
+});
+
 module.exports = router;
