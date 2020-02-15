@@ -5,9 +5,200 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #ecf0f1;
+  font-family: Montserrat,sans-serif;
+
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.table{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+thead{
+  /* background-color:#87cefa; */
+}
+
+#agencies-title{
+ color:#007bff;
+ /* #006fe6 */
+ /* #006ec4; */
+}
+h1 {
+  overflow: hidden;
+  margin-top: 10px;
+  text-align: center;
+ }
+ h1:before,
+ h1:after {
+  background-color: #333;
+  content: "";
+  display: inline-block;
+  height: 1.5px;
+  position: relative;
+  vertical-align: middle;
+  width: 50%;
+ }
+ h1:before {
+  right: 0.5em;
+  margin-left: -50%;
+ }
+ h1:after {
+  left: 0.5em;
+  margin-right: -50%;
+ }
+
+ .return-btn{
+   /* color:red; */
+   position: absolute;
+   left: 10px;
+top: 5px;
+background-color: transparent;
+border: transparent;
+ }
+
+ #blue-btn{
+   background-color:#007bff;
+    /* #006fe6 */
+ }
+ #white-btn{
+  color: #007bff;
+  /* #006fe6; */
+  background-color: white;
+}
+ .home-btn{
+   margin:10px;
+   /* height: 10vh;
+   width: 10vw; */
+   font-size: 1.3em;
+   padding: 15px;
+ }
+#select-label{
+  margin-top: 10px;
+  font-size: 1.3em;
+
+}
+ .card{
+   width: 70vw;
+   margin:auto;
+   padding-bottom: 30px;
+   padding-top: 15px;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+ }
+ form{
+   /* margin: auto; */
+   margin-top: 5vh;
+   width: 85vw;
+   display: flex;
+   flex-direction: column;
+   align-content: center;
+   justify-content:center
+ }
+ #add-agency-lable{
+font-size: 20px;
+font-weight: 700;
+margin-bottom: 20px;
+ }
+
+ .expend-btn{
+   color: white;
+   /* margin-right: 80vw; */
+   height: 8vh;
+   font-size: 1.1em;
+ }
+ .chevron{
+   margin-right: 10px;
+ }
+
+ .form-container{
+   display: flex;
+   flex-direction: column ;
+   align-items: center;
+ }
+ .btn-form{
+   margin-left: 5px;
+   margin-right: 5px;
+ }
+
+ #login-container{
+  display: flex;
+  flex-direction: column ;
+  align-items: center;
+  /* margin-top: 8vh; */
+  font-size: 1.1em;
+ 
+ }
+ #login-form{
+  width:45vw;
+
+ }
+
+
+ #btn-container{
+  display: flex;
+  /* flex-direction: column ; */
+  /* align-items: center; */
+  margin-left: 10px;
+ }
+ .form-group{
+   display: flex;
+   align-items: flex-start;
+   text-align: left;
+   margin-bottom: 20px;
+
+ }
+ .btn-login{
+font-size: 1.3em;
+opacity: 1;
+/* animation-name: fadeInOpacity;
+animation-iteration-count: 1;
+animation-timing-function: ease-in;
+animation-duration: 2s; */
+ }
+ .scroll-down{
+	opacity: 1;
+	animation-name: ScorllDown;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: 1s;
+}
+
+@keyframes ScorllDown {
+	0% {
+    height: 0px;
+		/* opacity: 0; */
+	}
+	100% {
+    height: 200px;
+		opacity: 1;
+	}
+}
+ .btn-table{
+   font-size: 0.8em;
+   margin-left: 3px;
+   margin-right: 3px;
+ }
+ /* form{
+  border-style: solid;
+
+  border-width: 0.01em;
+   background-color: whitesmoke;
+   padding-top: 15px;
+   padding-bottom: 15px;
+
+   margin: 15px;
+ } */
+
+ /* display: block;
+    unicode-bidi: isolate;
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+    overflow: hidden;
+    border-style: inset;
+    border-width: 1px; */

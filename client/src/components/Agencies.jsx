@@ -13,7 +13,8 @@ class Agencies extends React.Component {
       subscription: this.getTime(),
       page: "default",
       editObj: {},
-      editMode: false
+      editMode: false,
+      formVisible:false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -24,6 +25,8 @@ class Agencies extends React.Component {
     this.handleEdit = this.handleEdit.bind(this);
     this.saveChanges = this.saveChanges.bind(this);
     this.discardChanges = this.discardChanges.bind(this);
+    this.changeFormVisibility = this.changeFormVisibility.bind(this);
+
   }
 
   getTime() {
@@ -65,6 +68,10 @@ class Agencies extends React.Component {
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+  }
+
+  changeFormVisibility(){
+    this.setState({formVisible: !this.state.formVisible})
   }
 
   async handleSubmit(event) {
@@ -114,6 +121,7 @@ class Agencies extends React.Component {
   }
 
   handleEdit(event) {
+    this.setState({formVisible: true})
     let id = event.target.parentElement.parentElement.childNodes[0].innerHTML;
     let name = event.target.parentElement.parentElement.childNodes[1].innerHTML;
     let website =
@@ -144,6 +152,7 @@ class Agencies extends React.Component {
   }
 
   async saveChanges() {
+    this.setState({formVisible: false})
     console.log(this.state.editObj);
     this.setState({
       editObj: {
@@ -164,14 +173,17 @@ class Agencies extends React.Component {
     console.log(this.state.editObj);
   }
 
-  discardChanges() {}
+  discardChanges() {
+    this.setState({formVisible: false})
+
+  }
 
   validateState(obj) {
     if (
       obj.agencyName &&
       obj.website &&
       obj.phone &&
-      obj.package &&
+      // obj.package &&
       obj.subscription
     ) {
       return true;
@@ -205,8 +217,9 @@ class Agencies extends React.Component {
       <div>
         <h1>Added successfuly!</h1>
         <br />
-        <button className="btn btn-info" onClick={this.handleReturn}>
-          Return
+        <button className="btn btn-primary" onClick={this.handleReturn}>
+        <i class="fas fa-arrow-circle-left"></i> Return
+          
         </button>
       </div>
     );
@@ -216,10 +229,10 @@ class Agencies extends React.Component {
     if (this.state.editMode) {
       return (
         <div>
-          <button className="btn btn-success" onClick={this.saveChanges}>
+          <button className="btn btn-success btn-form" onClick={this.saveChanges}>
             Save
           </button>
-          <button className="btn btn-warning" onClick={this.discardChanges}>
+          <button className="btn btn-warning btn-form" onClick={this.discardChanges}>
             Cancel
           </button>
         </div>
@@ -227,70 +240,60 @@ class Agencies extends React.Component {
     } else {
       return (
         <div>
-          <button className="btn btn-primary" onClick={this.handleSubmit}>
+          <button id="blue-btn" className="btn btn-primary btn-form" onClick={this.handleSubmit}>
             Add
           </button>
-          <button className="btn btn-secondary" onClick={this.handleReset}>
+          <button className="btn btn-secondary btn-form" onClick={this.handleReset}>
             Reset
           </button>
         </div>
       );
     }
   }
+  renderForm(){
+return (
+  <div className="form-container">
+  <form>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Agency name</label>
+            <div class="col-sm-8">
+              <input type="text" 
+              class="form-control" 
+              name="agencyName"
+              value={this.state.agencyName}
+              onChange={this.handleChange}/>
+            </div>
+          </div>
 
-  render() {
-    if (this.state.page == "added") {
-      return this.renderAdded();
-    }
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Website</label>
+    <div class="col-sm-8">
+      <input type="text" 
+      class="form-control" 
+      name="website"
+      value={this.state.website}
+      onChange={this.handleChange}/>
+    </div>
+  </div>
 
-    return (
-      <div>
-        <button
-          className="btn btn-warning"
-          onClick={() => this.props.changePage("default")}
-        >
-          Return
-        </button>
-        <h1 className="text-primary">Agencies Panel</h1>
-
-        <label>Add agency</label>
-        <br />
-        <label>Agency name</label>
-        <input
-          type="text"
-          name="agencyName"
-          value={this.state.agencyName}
-          onChange={this.handleChange}
-        />
-        <br />
-        <br />
-        <label>Website</label>
-        <input
-          type="text"
-          name="website"
-          value={this.state.website}
-          onChange={this.handleChange}
-        />
-        <br />
-        <br />
-        <label>Phone</label>
-        <input
-          type="text"
-          name="phone"
-          value={this.state.phone}
-          onChange={this.handleChange}
-        />
-        <br />
-        <br />
-
-        <label>Package</label>
-        <br />
-        <select
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Phone</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" 
+         name="phone"
+         value={this.state.phone}
+         onChange={this.handleChange}/>
+    </div>
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label">Package</label>
+      <div class="col-sm-8">
+         <select class="form-control"
           name="package"
           id="package"
           onChange={this.handleChange}
-          defaultValue={this.state.packages[0]}
-        >
+          defaultValue={this.state.packages[0]}>
+          <option selected>Choose</option>
           {this.state.packages.map((onePack, i) => (
             <option key={onePack.id} id={onePack.id} value={onePack.id}>
               {onePack.id}
@@ -299,23 +302,53 @@ class Agencies extends React.Component {
             </option>
           ))}
         </select>
-        <br />
-        <br />
-
-        <label>Subscription</label>
-
-        <input
-          type="date"
-          name="subscription"
-          value={this.state.subscription}
-          onChange={this.handleChange}
-        />
-        <br />
-        <br />
+      </div>
+     
+    </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Subscription</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" placeholder=""/>
+    </div>
+  </div>
+</form>
+<div>
         {this.renderButtons()}
 
+        </div>
+</div>
+)
+  }
+  render() {
+    if (this.state.page == "added") {
+      return this.renderAdded();
+    }
+
+    return (
+      
+      <div>
+        <button
+          className="return-btn"
+          onClick={() => this.props.changePage("default")}
+        >
+          
+          <i class="fas fa-arrow-circle-left"></i>
+        </button>
+        <h1 id="agencies-title">Agencies Panel</h1>
+        <div id="btn-container">
+        <button id={this.state.formVisible? "white-btn":"blue-btn" }
+        className="btn expend-btn" 
+        onClick={this.changeFormVisibility}>
+          {this.state.formVisible? 
+           <i class="fas fa-chevron-down chevron"></i> :
+          <i class="fas fa-chevron-right chevron"></i>  }
+         Add agency
+          </button>
+        </div>
+       
+    {this.state.formVisible? this.renderForm() : null}
         <br />
-        <br />
+
         <br />
         <table className="table">
           <thead>
@@ -366,21 +399,27 @@ class Agencies extends React.Component {
                   <td>
                     {" "}
                     <button
-                      className="btn btn-danger"
+                      className="btn btn-danger btn-table"
                       onClick={this.handleDelete}
                     >
                       Delete
                     </button>
-                  </td>
-                  <td>
-                    {" "}
                     <button
-                      className="btn btn-warning"
+                      className="btn btn-warning btn-table"
                       onClick={this.handleEdit}
                     >
                       Edit
                     </button>
                   </td>
+                  {/* <td>
+                    {" "}
+                    <button
+                      className="btn btn-warning btn-table"
+                      onClick={this.handleEdit}
+                    >
+                      Edit
+                    </button>
+                  </td> */}
                 </tr>
               );
             })}
