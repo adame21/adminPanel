@@ -406,11 +406,10 @@ return (
 
     return (
       <React.Fragment>
-              <button
+      <button
           className="return-btn"
           onClick={() => this.props.changePage("default")}
         >
-          
           <i class="fas fa-arrow-circle-left"></i>
         </button>
         <h1 id="agencies-title">Agencies Panel</h1>

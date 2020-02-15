@@ -19,7 +19,9 @@ class Agents extends React.Component {
       searchAgencyName: "",
       searchAgency: "none",
       searchAgentName: "",
-      searchPhone: ""
+      searchPhone: "",
+      addAgentFormVisible:false,
+      searchAgentFormVisible:false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -32,6 +34,8 @@ class Agents extends React.Component {
     this.discardChanges = this.discardChanges.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleSearchReset = this.handleSearchReset.bind(this);
+    this.changeAddAgentFormVisibility = this.changeAddAgentFormVisibility.bind(this);
+    this.changeSearchAgentFormVisibility=this.changeSearchAgentFormVisibility.bind(this);
   }
 
   getTime() {
@@ -75,7 +79,13 @@ class Agents extends React.Component {
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
+  changeAddAgentFormVisibility(){
+    this.setState({addAgentFormVisible: !this.state.addAgentFormVisible})
+  }
+  changeSearchAgentFormVisibility(){
+    this.setState({searchAgentFormVisible: !this.state.searchAgentFormVisible})
 
+  }
   async handleSearch() {
     var searchRes = await fetch(
       `http://localhost:3005/select/agents?searchName=${this.state.searchAgentName}&searchPhone=${this.state.searchPhone}&searchAgency=${this.state.searchAgency}`
@@ -141,6 +151,7 @@ class Agents extends React.Component {
   }
 
   handleEdit(event) {
+    this.setState({addAgentFormVisible: true})
     let id = event.target.parentElement.parentElement.childNodes[0].innerHTML;
     let name = event.target.parentElement.parentElement.childNodes[1].innerHTML;
     let cellular =
@@ -171,6 +182,7 @@ class Agents extends React.Component {
   }
 
   async saveChanges() {
+    this.setState({addAgentFormVisible: false})
     this.setState({
       editObj: Object.assign(this.state.editObj, {
         agentName: this.state.agentName,
@@ -193,6 +205,7 @@ class Agents extends React.Component {
   }
 
   discardChanges() {
+    this.setState({addAgentFormVisible: false})
     this.handleReset();
     this.setState({
       editMode: false
@@ -247,106 +260,58 @@ class Agents extends React.Component {
       </div>
     );
   }
-
-  renderButtons() {
-    if (this.state.editMode) {
-      return (
-        <div>
-          <button className="btn btn-success" onClick={this.saveChanges}>
-            Save
-          </button>
-          <button className="btn btn-warning" onClick={this.discardChanges}>
-            Cancel
-          </button>
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <button className="btn btn-primary" onClick={this.handleSubmit}>
-            Add
-          </button>
-          <button className="btn btn-secondary" onClick={this.handleReset}>
-            Reset
-          </button>
-        </div>
-      );
-    }
-  }
-  renderSearchButtons() {
+  renderAddAgentForm(){
     return (
-      <div>
-        <button className="btn btn-primary" onClick={this.handleSearch}>
-          Search
-        </button>
-        <button className="btn btn-secondary" onClick={this.handleSearchReset}>
-          Reset Search
-        </button>
-      </div>
-    );
-  }
-
-  render() {
-    if (this.state.page == "added") {
-      return this.renderAdded();
-    }
-
-    return (
-      <React.Fragment>
-        <div className="container">
-          <div className="col align-self-center">
-            <button
-              className="btn btn-warning"
-              onClick={() => this.props.changePage("default")}
-            >
-              Return
-            </button>
-          </div>
-          <div className="col align-self-center">
-            <h1 className="text-primary">Agents Panel</h1>
-          </div>
-
-          <div className="row justify-content-between">
-            <div className="col-4">
-              <h2>Add Agent</h2>
-              <br />
-              <label>Agent Name</label>
-              <input
+      <div className="form-container">
+      <form>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Agent Name</label>
+                <div class="col-sm-8">
+                <input
                 className="form-control"
                 type="text"
-                name="agentName"
-                value={this.state.agentName}
-                onChange={this.handleChange}
-              />
-              <br />
-              <br />
-              <label>Cellular</label>
-              <input
+                name="agencyName"
+                value={this.state.agencyName}
+                  onChange={this.handleChange}/>
+              
+                  
+                </div>
+              </div>
+    
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Cellular</label>
+        <div class="col-sm-8">
+        <input
                 className="form-control"
                 type="text"
                 name="cellular"
                 value={this.state.cellular}
                 onChange={this.handleChange}
               />
-              <br />
-              <br />
-              <label>Password</label>
-              <input
+        </div>
+      </div>
+    
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Password</label>
+        <div class="col-sm-8">
+        <input
                 className="form-control"
                 type="password"
                 name="password"
                 value={this.state.password}
                 onChange={this.handleChange}
               />
-              <br />
-              <br />
-
-              <select
+        </div>
+      </div>
+      <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Agency</label>
+          <div class="col-sm-8">
+          <select
                 className="form-control"
-                name="agency"
-                id="agency"
+                name="searchAgency"
+                id="searchAgency"
                 onChange={this.handleChange}
-                value={this.state.agency}
+                value={this.state.searchAgency}
               >
                 {this.state.agencies.map((oneAgency, i) => (
                   <option
@@ -357,46 +322,68 @@ class Agents extends React.Component {
                     {oneAgency.id} - {oneAgency.name} - {oneAgency.phone}
                   </option>
                 ))}
+                <option key={"none"} id={"none"} value={"none"}>
+                  None
+                </option>
               </select>
-              <br />
-              <br />
-              <label>License</label>
-              <input
+          </div>
+         
+        </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">License</label>
+        <div class="col-sm-8">
+        <input
                 className="form-control"
                 type="text"
                 name="license"
                 value={this.state.license}
                 onChange={this.handleChange}
               />
-              <br />
-              <br />
-
-              {this.renderButtons()}
+        </div>
+      </div>
+    </form>
+    <div>
+            {this.renderButtons()}
+    
             </div>
-            <div className="col-4">
-              <h2>Search Agent</h2>
-              <br />
-              <label>Agent name</label>
-              <input
+    </div>
+    )
+      }
+
+      renderSearchAgentForm(){
+        return (
+          <div className="form-container">
+          <form>
+                  <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Agent Name</label>
+                    <div class="col-sm-8">
+                    <input
                 className="form-control"
                 type="text"
                 name="searchAgentName"
                 value={this.state.searchAgentName}
                 onChange={this.handleChange}
               />
-              <br />
-              <br />
-              <br />
-              <label>Cellular</label>
-              <input
+                      
+                    </div>
+                  </div>
+        
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Cellular</label>
+            <div class="col-sm-8">
+            <input
                 className="form-control"
                 type="text"
                 name="searchPhone"
                 value={this.state.searchPhone}
                 onChange={this.handleChange}
               />
-              <br />
-              <br />
+            </div>
+          </div>
+        
+          <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Agency</label>
+              <div class="col-sm-8">
               <select
                 className="form-control"
                 name="searchAgency"
@@ -417,11 +404,94 @@ class Agents extends React.Component {
                   None
                 </option>
               </select>
-              {this.renderSearchButtons()}
+              </div>
+             
             </div>
-          </div>
+          
+        </form>
+        <div>
+                {this.renderSearchButtons()}
+                </div>
         </div>
+        )
+          }
 
+  renderButtons() {
+    if (this.state.editMode) {
+      return (
+        <div>
+          <button className="btn btn-success btn-form" onClick={this.saveChanges}>
+            Save
+          </button>
+          <button className="btn btn-warning btn-form" onClick={this.discardChanges}>
+            Cancel
+          </button>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <button className="btn btn-primary btn-form" onClick={this.handleSubmit}>
+            Add
+          </button>
+          <button className="btn btn-secondary btn-form" onClick={this.handleReset}>
+            Reset
+          </button>
+        </div>
+      );
+    }
+  }
+  renderSearchButtons() {
+    return (
+      <div>
+        <button className="btn btn-primary btn-form" onClick={this.handleSearch}>
+          Search
+        </button>
+        <button className="btn btn-secondary btn-form" onClick={this.handleSearchReset}>
+          Reset Search
+        </button>
+      </div>
+    );
+  }
+
+  render() {
+    if (this.state.page == "added") {
+      return this.renderAdded();
+    }
+
+    return (
+      <React.Fragment>
+          <button
+          className="return-btn"
+          onClick={() => this.props.changePage("default")}
+        >
+          <i class="fas fa-arrow-circle-left"></i>
+        </button>
+        <h1 id="agencies-title">Agents Panel</h1>
+        <div id="btn-container">
+        <button id={this.state.addAgentFormVisible? "white-btn":"blue-btn" }
+        className="btn expend-btn" 
+        onClick={this.changeAddAgentFormVisibility}>
+          {this.state.addAgentFormVisible? 
+           <i class="fas fa-chevron-down chevron"></i> :
+          <i class="fas fa-chevron-right chevron"></i>  }
+         Add agent
+          </button>
+        </div>
+        {this.state.addAgentFormVisible? this.renderAddAgentForm() : null}
+
+        <div id="btn-container">
+        <button id={this.state.searchAgentFormVisible? "white-btn":"blue-btn" }
+        className="btn expend-btn" 
+        onClick={this.changeSearchAgentFormVisibility}>
+          {this.state.searchAgentFormVisible? 
+           <i class="fas fa-chevron-down chevron"></i> :
+          <i class="fas fa-chevron-right chevron"></i>  }
+         Search agent
+          </button>
+        </div>
+        {this.state.searchAgentFormVisible? this.renderSearchAgentForm() : null}
+<br></br>
         <div>
           <table className="table">
             <thead>
@@ -472,16 +542,13 @@ class Agents extends React.Component {
                     <td>
                       {" "}
                       <button
-                        className="btn btn-danger"
+                        className="btn btn-danger btn-table"
                         onClick={this.handleDelete}
                       >
                         Delete
                       </button>
-                    </td>
-                    <td>
-                      {" "}
                       <button
-                        className="btn btn-warning"
+                        className="btn btn-warning btn-table"
                         onClick={this.handleEdit}
                       >
                         Edit
