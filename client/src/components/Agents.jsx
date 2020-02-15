@@ -98,12 +98,19 @@ class Agents extends React.Component {
           body: JSON.stringify(this.state)
         });
         var data = await res.json();
-        this.setState({
-          page: "added"
-        });
 
-        this.handleReset();
-        this.loadArrays();
+        debugger;
+        if (data.status) {
+          this.setState({
+            page: "added"
+          });
+          this.handleReset();
+          this.loadArrays();
+        } else {
+          alert(
+            `Agent was NOT added, current agents in agency: ${data.currentAgents}, Limit: ${data.limitForAgency}`
+          );
+        }
       } catch (err) {
         console.log("err: " + err.message, "stack: " + err.stack);
       }
