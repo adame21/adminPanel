@@ -14,6 +14,8 @@ class Agencies extends React.Component {
       page: "default",
       editObj: {},
       editMode: false,
+      addAgencyFormVisible:false,
+      searchAgencyFormVisible:false,
       searchAgencyName: "",
       searchPhone: ""
     };
@@ -26,6 +28,8 @@ class Agencies extends React.Component {
     this.handleEdit = this.handleEdit.bind(this);
     this.saveChanges = this.saveChanges.bind(this);
     this.discardChanges = this.discardChanges.bind(this);
+    this.changeAddAgencyFormVisibility = this.changeAddAgencyFormVisibility.bind(this);
+    this.changeSearchAgencyFormVisibility=this.changeSearchAgencyFormVisibility.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleSearchReset = this.handleSearchReset.bind(this);
   }
@@ -71,6 +75,13 @@ class Agencies extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  changeAddAgencyFormVisibility(){
+    this.setState({addAgencyFormVisible: !this.state.addAgencyFormVisible})
+  }
+  changeSearchAgencyFormVisibility(){
+    this.setState({searchAgencyFormVisible: !this.state.searchAgencyFormVisible})
+
+  }
   async handleSearch() {
     var searchRes = await fetch(
       `http://localhost:3005/select/agencies?searchName=${this.state.searchAgencyName}&searchPhone=${this.state.searchPhone}`
@@ -129,6 +140,7 @@ class Agencies extends React.Component {
   }
 
   handleEdit(event) {
+    this.setState({addAgencyFormVisible: true})
     let id = event.target.parentElement.parentElement.childNodes[0].innerHTML;
     let name = event.target.parentElement.parentElement.childNodes[1].innerHTML;
     let website =
@@ -159,6 +171,7 @@ class Agencies extends React.Component {
   }
 
   async saveChanges() {
+    this.setState({addAgencyFormVisible: false})
     debugger;
     this.setState({
       editObj: Object.assign(this.state.editObj, {
@@ -182,6 +195,8 @@ class Agencies extends React.Component {
   }
 
   discardChanges() {
+    this.setState({addAgencyFormVisible: false})
+
     this.handleReset();
     this.setState({
       editMode: false
@@ -193,7 +208,7 @@ class Agencies extends React.Component {
       obj.agencyName &&
       obj.website &&
       obj.phone &&
-      obj.package &&
+      // obj.package &&
       obj.subscription
     ) {
       return true;
@@ -229,8 +244,9 @@ class Agencies extends React.Component {
       <div>
         <h1>Added successfuly!</h1>
         <br />
-        <button className="btn btn-info" onClick={this.handleReturn}>
-          Return
+        <button className="btn btn-primary" onClick={this.handleReturn}>
+        <i class="fas fa-arrow-circle-left"></i> Return
+          
         </button>
       </div>
     );
@@ -240,10 +256,10 @@ class Agencies extends React.Component {
     if (this.state.editMode) {
       return (
         <div>
-          <button className="btn btn-success" onClick={this.saveChanges}>
+          <button className="btn btn-success btn-form" onClick={this.saveChanges}>
             Save
           </button>
-          <button className="btn btn-warning" onClick={this.discardChanges}>
+          <button className="btn btn-warning btn-form" onClick={this.discardChanges}>
             Cancel
           </button>
         </div>
@@ -251,25 +267,133 @@ class Agencies extends React.Component {
     } else {
       return (
         <div>
-          <button className="btn btn-primary" onClick={this.handleSubmit}>
+          <button id="blue-btn" className="btn btn-primary btn-form" onClick={this.handleSubmit}>
             Add
           </button>
-          <button className="btn btn-secondary" onClick={this.handleReset}>
+          <button className="btn btn-secondary btn-form" onClick={this.handleReset}>
             Reset
           </button>
         </div>
       );
     }
   }
+  renderAddAgencyForm(){
+return (
+  <div className="form-container">
+  <form>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Agency name</label>
+            <div class="col-sm-8">
+              <input type="text" 
+              class="form-control" 
+              name="agencyName"
+              value={this.state.agencyName}
+              onChange={this.handleChange}/>
+            </div>
+          </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Website</label>
+    <div class="col-sm-8">
+      <input type="text" 
+      class="form-control" 
+      name="website"
+      value={this.state.website}
+      onChange={this.handleChange}/>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Phone</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" 
+         name="phone"
+         value={this.state.phone}
+         onChange={this.handleChange}/>
+    </div>
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label">Package</label>
+      <div class="col-sm-8">
+         <select class="form-control"
+          name="package"
+          id="package"
+          onChange={this.handleChange}
+          defaultValue={this.state.packages[0]}>
+          <option selected>Choose</option>
+          {this.state.packages.map((onePack, i) => (
+            <option key={onePack.id} id={onePack.id} value={onePack.id}>
+              {onePack.id}
+              {onePack.name} - {onePack.no_of_agents} agents -{" "}
+              {onePack.no_of_documents} documents
+            </option>
+          ))}
+        </select>
+      </div>
+     
+    </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Subscription</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" placeholder=""/>
+    </div>
+  </div>
+</form>
+<div>
+        {this.renderButtons()}
+
+        </div>
+</div>
+)
+  }
+
+  renderSearchAgencyForm(){
+    return (
+      <div className="form-container">
+      <form>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Agency name</label>
+                <div class="col-sm-8">
+                <input
+                className="form-control"
+                type="text"
+                name="searchAgencyName"
+                value={this.state.searchAgencyName}
+                onChange={this.handleChange}
+              />
+                </div>
+              </div> 
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Phone</label>
+            <div class="col-sm-8">
+            <input
+                    className="form-control"
+                    type="text"
+                    name="searchPhone"
+                    value={this.state.searchPhone}
+                    onChange={this.handleChange}
+                  />
+            </div>
+      </div>
+      
+      
+    </form>
+    <div>
+            {this.renderSearchButtons()}
+    
+            </div>
+    </div>
+    )
+      }
 
   renderSearchButtons() {
     return (
       <div>
-        <button className="btn btn-primary" onClick={this.handleSearch}>
+        <button className="btn btn-primary btn-form" onClick={this.handleSearch}>
           Search
         </button>
-        <button className="btn btn-secondary" onClick={this.handleSearchReset}>
-          Reset Search
+        <button className="btn btn-secondary btn-form" onClick={this.handleSearchReset}>
+          Reset Search 
         </button>
       </div>
     );
@@ -282,113 +406,39 @@ class Agencies extends React.Component {
 
     return (
       <React.Fragment>
-        <div className="container">
-          <div className="col align-self-center">
-            <button
-              className="btn btn-warning"
-              onClick={() => this.props.changePage("default")}
-            >
-              Return
-            </button>
-          </div>
-          <div className="col align-self-center">
-            <h1 className="text-primary">Agencies Panel</h1>
-          </div>
-
-          <div className="row justify-content-between">
-            <div className="col-4">
-              {" "}
-              <h2>Add agency</h2>
-              <br />
-              <label>Agency name</label>
-              <input
-                className="form-control"
-                type="text"
-                name="agencyName"
-                value={this.state.agencyName}
-                onChange={this.handleChange}
-              />
-              <br />
-              <br />
-              <label>Website</label>
-              <input
-                className="form-control"
-                type="text"
-                name="website"
-                value={this.state.website}
-                onChange={this.handleChange}
-              />
-              <br />
-              <br />
-              <label>Phone</label>
-              <input
-                className="form-control"
-                type="text"
-                name="phone"
-                value={this.state.phone}
-                onChange={this.handleChange}
-              />
-              <br />
-              <br />
-              <label>Package</label>
-              <br />
-              <select
-                className="form-control"
-                name="package"
-                id="package"
-                onChange={this.handleChange}
-                value={this.state.package}
-              >
-                {this.state.packages.map((onePack, i) => (
-                  <option key={onePack.id} id={onePack.id} value={onePack.id}>
-                    {onePack.id}
-                    {onePack.name} - {onePack.no_of_agents} agents -{" "}
-                    {onePack.no_of_documents} documents
-                  </option>
-                ))}
-              </select>
-              <br />
-              <br />
-              <label>Subscription</label>
-              <input
-                className="form-control"
-                type="date"
-                name="subscription"
-                value={this.state.subscription}
-                onChange={this.handleChange}
-              />
-              <br />
-              <br />
-              {this.renderButtons()}
-            </div>
-            <div className="col-4">
-              <h2>Search agency</h2>
-              <br />
-              <label>Agency name</label>
-              <input
-                className="form-control"
-                type="text"
-                name="searchAgencyName"
-                value={this.state.searchAgencyName}
-                onChange={this.handleChange}
-              />
-              <br />
-              <br />
-              <br />
-              <label>Phone</label>
-              <input
-                className="form-control"
-                type="text"
-                name="searchPhone"
-                value={this.state.searchPhone}
-                onChange={this.handleChange}
-              />
-              <br />
-              {this.renderSearchButtons()}
-            </div>
-          </div>
+              <button
+          className="return-btn"
+          onClick={() => this.props.changePage("default")}
+        >
+          
+          <i class="fas fa-arrow-circle-left"></i>
+        </button>
+        <h1 id="agencies-title">Agencies Panel</h1>
+        <div id="btn-container">
+        <button id={this.state.addAgencyFormVisible? "white-btn":"blue-btn" }
+        className="btn expend-btn" 
+        onClick={this.changeAddAgencyFormVisibility}>
+          {this.state.addAgencyFormVisible? 
+           <i class="fas fa-chevron-down chevron"></i> :
+          <i class="fas fa-chevron-right chevron"></i>  }
+         Add agency
+          </button>
         </div>
 
+       
+    {this.state.addAgencyFormVisible? this.renderAddAgencyForm() : null}
+    <div id="btn-container">
+        <button id={this.state.searchAgencyFormVisible? "white-btn":"blue-btn" }
+        className="btn expend-btn" 
+        onClick={this.changeSearchAgencyFormVisibility}>
+          {this.state.searchAgencyFormVisible? 
+           <i class="fas fa-chevron-down chevron"></i> :
+          <i class="fas fa-chevron-right chevron"></i>  }
+         Search agency
+          </button>
+        </div>
+        {this.state.searchAgencyFormVisible? this.renderSearchAgencyForm() : null}
+        <br />
         <div>
           <table className="table">
             <thead>
@@ -439,16 +489,13 @@ class Agencies extends React.Component {
                     <td>
                       {" "}
                       <button
-                        className="btn btn-danger"
+                        className="btn btn-danger btn-table"
                         onClick={this.handleDelete}
                       >
                         Delete
                       </button>
-                    </td>
-                    <td>
-                      {" "}
                       <button
-                        className="btn btn-warning"
+                        className="btn btn-warning btn-table"
                         onClick={this.handleEdit}
                       >
                         Edit

@@ -49,18 +49,17 @@ class Home extends React.Component {
         return (
           <div>
             <h1 className="text-primary">Home</h1>
-
-            <label>Select:</label>
+            <label id="select-label">Select:</label>
             <br />
             <button
-              className="btn-primary"
+              className="btn btn-primary home-btn"
               value="agencies"
               onClick={() => this.handleClick("agencies")}
             >
               Agencies
             </button>
             <button
-              className="btn-primary"
+              className="btn btn-primary home-btn"
               value="agents"
               onClick={() => this.handleClick("agents")}
             >

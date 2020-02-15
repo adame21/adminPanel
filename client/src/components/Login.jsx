@@ -47,29 +47,46 @@ class Login extends React.Component {
     return (
       <div>
         <h1 className="text-primary">Login</h1>
-
-        <label>Username:</label>
-        <input
+        <div id="login-container">
+        <form id="login-form">
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Username: </label>
+            <div class="col-sm-8">
+           
+               <input
           type="text"
+          class="form-control" 
           value={this.state.userName}
           onChange={this.handleChange}
           name="userName"
         />
-        <br />
-        <label>Password:</label>
-        <input
+        
+            </div>
+          </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Password: </label>
+    <div class="col-sm-8">
+       <input
           type="password"
+          class="form-control" 
+
           value={this.state.password}
           onChange={this.handleChange}
           name="password"
         />
-        <br />
-        <button className="btn-primary" onClick={this.handleSubmit}>
+    </div>
+  </div>
+  </form>
+  <div>
+  <button className="btn btn-primary btn-form btn-login" onClick={this.handleSubmit}>
           Login
         </button>
-        <button className="btn-secondary" onClick={this.handleReset}>
+        <button className="btn btn-secondary btn-form btn-login" onClick={this.handleReset}>
           Reset
         </button>
+  </div>
+  </div>
       </div>
     );
   }
