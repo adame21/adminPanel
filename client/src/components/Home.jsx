@@ -1,5 +1,6 @@
 import React from "react";
 import Agencies from "./Agencies";
+import Agents from "./Agents";
 
 class Home extends React.Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class Home extends React.Component {
   renderAgents() {
     return (
       <div>
-        <h1>hi</h1>
+        <Agents changePage={this.changePage} />
       </div>
     );
   }
