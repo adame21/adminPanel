@@ -25,8 +25,6 @@ thead{
 
 #agencies-title{
  color:#007bff;
- /* #006fe6 */
- /* #006ec4; */
 }
 h1 {
   overflow: hidden;
@@ -53,27 +51,22 @@ h1 {
  }
 
  .return-btn{
-   /* color:red; */
    position: absolute;
    left: 10px;
-top: 5px;
-background-color: transparent;
-border: transparent;
+    top: 5px;
+    background-color: transparent;
+    border: transparent;
  }
 
  #blue-btn{
    background-color:#007bff;
-    /* #006fe6 */
  }
  #white-btn{
   color: #007bff;
-  /* #006fe6; */
   background-color: white;
 }
  .home-btn{
    margin:10px;
-   /* height: 10vh;
-   width: 10vw; */
    font-size: 1.3em;
    padding: 15px;
  }
@@ -90,7 +83,6 @@ border: transparent;
    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
  }
  form{
-   /* margin: auto; */
    margin-top: 5vh;
    width: 85vw;
    display: flex;
@@ -106,9 +98,10 @@ margin-bottom: 20px;
 
  .expend-btn{
    color: white;
-   /* margin-right: 80vw; */
    height: 8vh;
-   font-size: 1.1em;
+   font-size: 15px;
+   width: 200px;
+   margin-top: 10px;
  }
  .chevron{
    margin-right: 10px;
@@ -128,7 +121,6 @@ margin-bottom: 20px;
   display: flex;
   flex-direction: column ;
   align-items: center;
-  /* margin-top: 8vh; */
   font-size: 1.1em;
  
  }
@@ -140,8 +132,6 @@ margin-bottom: 20px;
 
  #btn-container{
   display: flex;
-  /* flex-direction: column ; */
-  /* align-items: center; */
   margin-left: 10px;
  }
  .form-group{
@@ -154,10 +144,6 @@ margin-bottom: 20px;
  .btn-login{
 font-size: 1.3em;
 opacity: 1;
-/* animation-name: fadeInOpacity;
-animation-iteration-count: 1;
-animation-timing-function: ease-in;
-animation-duration: 2s; */
  }
  .scroll-down{
 	opacity: 1;
@@ -170,7 +156,6 @@ animation-duration: 2s; */
 @keyframes ScorllDown {
 	0% {
     height: 0px;
-		/* opacity: 0; */
 	}
 	100% {
     height: 200px;
@@ -182,23 +167,4 @@ animation-duration: 2s; */
    margin-left: 3px;
    margin-right: 3px;
  }
- /* form{
-  border-style: solid;
-
-  border-width: 0.01em;
-   background-color: whitesmoke;
-   padding-top: 15px;
-   padding-bottom: 15px;
-
-   margin: 15px;
- } */
-
- /* display: block;
-    unicode-bidi: isolate;
-    margin-block-start: 0.5em;
-    margin-block-end: 0.5em;
-    margin-inline-start: auto;
-    margin-inline-end: auto;
-    overflow: hidden;
-    border-style: inset;
-    border-width: 1px; */
+ 
